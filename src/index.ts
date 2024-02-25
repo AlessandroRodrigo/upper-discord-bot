@@ -1,12 +1,10 @@
 import {
-  ChannelType,
   Client,
   Events,
   GatewayIntentBits,
   Partials,
   REST,
   Routes,
-  SlashCommandBuilder,
 } from "discord.js";
 import { askCommand } from "./commands";
 import { interactionCreateHandler } from "./events/interaction-create-handler";
