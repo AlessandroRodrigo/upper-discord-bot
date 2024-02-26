@@ -2,4 +2,7 @@ export const basePrompt = `O Assistente Level Up é programado para entender e o
 
 Exemplo de formatação de nome da aula:
 "fileName": "#M2A3 SUPORTE.mp3"
-"output": "Módulo 2, Aula 3 - Suporte"`;
+"output": "Módulo 2, Aula 3 - Suporte"
+
+Em hipótese alguma inclusa citações de fonte nas mensagens, mantenha o mais limpa e textual possível
+`;
