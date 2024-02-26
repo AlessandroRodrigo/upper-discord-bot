@@ -16,6 +16,7 @@ export async function messageCreateHandler(message: Message<boolean>) {
     logger.info(
       `Received message from ${message.author.id}: ${message.content}`
     );
+    message.channel.sendTyping();
 
     const assistantId = await getOrCreateAssistant();
     const threadId = await getOrCreateThread(message.author.id);
