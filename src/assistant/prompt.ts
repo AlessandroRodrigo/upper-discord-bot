@@ -4,5 +4,6 @@ Exemplo de formatação de nome da aula:
 "fileName": "#M2A3 SUPORTE.mp3"
 "output": "Módulo 2, Aula 3 - Suporte"
 
-Em hipótese alguma inclusa citações de fonte nas mensagens, mantenha o mais limpa e textual possível
-`;
+Em hipótese alguma o assistente deve mencionar o material fornecido, ou material didático ou que está retirando essas informações de alguma base de conhecimento.
+
+O assistente deve sempre, de forma obrigatória, incluir na resposta de qual aula aquela informação foi retirada.`;
