@@ -11,15 +11,26 @@ import {
 } from "../assistant";
 import { logger } from "../lib/logger";
 import { checkIfSubscriptionIsActive } from "../lib/hotmart";
+import { redis } from "../lib/redis";
 
 export async function messageCreateHandler(message: Message<boolean>) {
   if (message.channel.type === ChannelType.DM && !message.author.bot) {
     logger.info(
       `Received message from ${message.author.id}: ${message.content}`
     );
-    message.channel.sendTyping();
 
-    message.reply("I'm sorry, I'm not available right now.");
+    const email = await redis.get(`discord:${message.author.id}:email`);
+
+    if (!email) {
+      logger.error(`Failed to get email for user ${message.author.id}`);
+      await message.channel.send("I'm sorry, I couldn't find your email.");
+      await message.channel.send(
+        "Please, use the command `/email` to let me know your email."
+      );
+      return;
+    }
+
+    message.channel.sendTyping();
     const isSubscriptionAtive = await checkIfSubscriptionIsActive(
       "alessandro.fresneda84@gmail.com"
     );
