@@ -9,3 +9,10 @@ export const askCommand = new SlashCommandBuilder()
       .setDescription("The question to ask")
       .setRequired(true)
   );
+
+export const emailCommand = new SlashCommandBuilder()
+  .setName("email")
+  .setDescription("Set your email")
+  .addStringOption((option) =>
+    option.setName("email").setDescription("Your email").setRequired(true)
+  );
