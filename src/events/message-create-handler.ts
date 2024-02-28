@@ -10,6 +10,7 @@ import {
   waitForThreadRun,
 } from "../assistant";
 import { logger } from "../lib/logger";
+import { checkIfSubscriptionIsActive } from "../lib/hotmart";
 
 export async function messageCreateHandler(message: Message<boolean>) {
   if (message.channel.type === ChannelType.DM && !message.author.bot) {
@@ -18,23 +19,32 @@ export async function messageCreateHandler(message: Message<boolean>) {
     );
     message.channel.sendTyping();
 
-    const assistantId = await getOrCreateAssistant();
-    const threadId = await getOrCreateThread(message.author.id);
-    await createThreadMessage(threadId, message.content);
-    const threadRun = await runThreadMessage(threadId, assistantId);
-    await waitForThreadRun(threadId, threadRun.id);
-    const threadMessages = await listThreadMessages(threadId);
-    const messageContent = await getMessageText(threadMessages);
+    message.reply("I'm sorry, I'm not available right now.");
+    const isSubscriptionAtive = await checkIfSubscriptionIsActive(
+      "alessandro.fresneda84@gmail.com"
+    );
 
-    if (!messageContent) {
-      logger.error(`Failed to get message content for thread ${threadId}`);
-      await message.reply("I'm sorry, I didn't understand that.");
-      return;
+    if (isSubscriptionAtive) {
+      const assistantId = await getOrCreateAssistant();
+      const threadId = await getOrCreateThread(message.author.id);
+      await createThreadMessage(threadId, message.content);
+      const threadRun = await runThreadMessage(threadId, assistantId);
+      await waitForThreadRun(threadId, threadRun.id);
+      const threadMessages = await listThreadMessages(threadId);
+      const messageContent = await getMessageText(threadMessages);
+
+      if (!messageContent) {
+        logger.error(`Failed to get message content for thread ${threadId}`);
+        await message.reply("I'm sorry, I didn't understand that.");
+        return;
+      }
+
+      const cleanMessage = removeMessageAnnotations(messageContent);
+
+      logger.info(`Sending message to ${message.author.id}: ${cleanMessage}`);
+      await message.reply(cleanMessage);
+    } else {
+      message.reply("You don't have an active subscription.");
     }
-
-    const cleanMessage = removeMessageAnnotations(messageContent);
-
-    logger.info(`Sending message to ${message.author.id}: ${cleanMessage}`);
-    await message.reply(cleanMessage);
   }
 }
