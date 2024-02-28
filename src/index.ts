@@ -6,7 +6,7 @@ import {
   REST,
   Routes,
 } from "discord.js";
-import { askCommand } from "./commands";
+import { askCommand, emailCommand } from "./commands";
 import { interactionCreateHandler } from "./events/interaction-create-handler";
 import { messageCreateHandler } from "./events/message-create-handler";
 
@@ -28,7 +28,7 @@ client.once(Events.ClientReady, () => {
   console.log("Ready!");
 });
 
-const commands = [askCommand].map((command) => command.toJSON());
+const commands = [askCommand, emailCommand].map((command) => command.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(token);
 
