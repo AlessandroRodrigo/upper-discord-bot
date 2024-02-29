@@ -1,17 +1,8 @@
-import { ChannelType, Message } from "discord.js";
-import {
-  createThreadMessage,
-  getMessageText,
-  getOrCreateAssistant,
-  getOrCreateThread,
-  listThreadMessages,
-  removeMessageAnnotations,
-  runThreadMessage,
-  waitForThreadRun,
-} from "@/assistant";
+import { AssistantFactory } from "@/factories/assistant";
+import { checkIfSubscriptionIsActive } from "@/lib/hotmart";
 import { logger } from "@/lib/logger";
 import { redis } from "@/lib/redis";
-import { checkIfSubscriptionIsActive } from "@/lib/hotmart";
+import { ChannelType, Message } from "discord.js";
 
 export async function messageCreateHandler(message: Message<boolean>) {
   if (message.channel.type === ChannelType.DM && !message.author.bot) {
@@ -34,24 +25,15 @@ export async function messageCreateHandler(message: Message<boolean>) {
     const isSubscriptionAtive = await checkIfSubscriptionIsActive(email);
 
     if (isSubscriptionAtive) {
-      const assistantId = await getOrCreateAssistant();
-      const threadId = await getOrCreateThread(message.author.id);
-      await createThreadMessage(threadId, message.content);
-      const threadRun = await runThreadMessage(threadId, assistantId);
-      await waitForThreadRun(threadId, threadRun.id);
-      const threadMessages = await listThreadMessages(threadId);
-      const messageContent = await getMessageText(threadMessages);
+      const assistantMessage = await AssistantFactory.createAssistantMessage({
+        authorId: message.author.id,
+        authorMessage: message.content,
+      });
 
-      if (!messageContent) {
-        logger.error(`Failed to get message content for thread ${threadId}`);
-        await message.reply("I'm sorry, I didn't understand that.");
-        return;
-      }
-
-      const cleanMessage = removeMessageAnnotations(messageContent);
-
-      logger.info(`Sending message to ${message.author.id}: ${cleanMessage}`);
-      await message.reply(cleanMessage);
+      logger.info(
+        `Sending message to ${message.author.id}: ${assistantMessage}`,
+      );
+      await message.reply(assistantMessage);
     } else {
       message.reply("You don't have an active subscription.");
     }
