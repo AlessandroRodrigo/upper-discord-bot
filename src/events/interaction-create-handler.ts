@@ -1,10 +1,10 @@
+import { redis } from "@/lib/redis";
 import {
   CacheType,
   CommandInteraction,
   Interaction,
   userMention,
 } from "discord.js";
-import { redis } from "../lib/redis";
 import { z } from "zod";
 
 export async function interactionCreateHandler(
