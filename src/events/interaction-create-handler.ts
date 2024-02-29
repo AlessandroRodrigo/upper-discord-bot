@@ -6,10 +6,9 @@ import {
 } from "discord.js";
 import { redis } from "../lib/redis";
 import { z } from "zod";
-import { logger } from "../lib/logger";
 
 export async function interactionCreateHandler(
-  interaction: Interaction<CacheType>
+  interaction: Interaction<CacheType>,
 ) {
   if (!interaction.isCommand()) return;
 
@@ -45,7 +44,7 @@ async function emailCommandHandler(interaction: CommandInteraction<CacheType>) {
 
 async function askCommandHandler(interaction: CommandInteraction<CacheType>) {
   const question = interaction.options.data.find(
-    (option) => option.name === "question"
+    (option) => option.name === "question",
   )?.value;
 
   if (!question) {
