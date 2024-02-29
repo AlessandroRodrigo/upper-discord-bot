@@ -1,14 +1,14 @@
+import { basePrompt } from "@/assistant/prompt";
+import { logger } from "@/lib/logger";
+import { openai } from "@/lib/openai";
+import { redis } from "@/lib/redis";
 import { createReadStream } from "fs";
-import path from "path";
-import { openai } from "../lib/openai";
-import { basePrompt } from "./prompt";
-import { Run } from "openai/resources/beta/threads/runs/runs";
 import {
   MessageContentText,
   ThreadMessagesPage,
 } from "openai/resources/beta/threads/messages/messages";
-import { logger } from "../lib/logger";
-import { redis } from "../lib/redis";
+import { Run } from "openai/resources/beta/threads/runs/runs";
+import path from "path";
 
 const DEFAULT_MODEL = "gpt-3.5-turbo-1106";
 const DEFAULT_NAME = "Level Up Assistant";
@@ -91,7 +91,7 @@ export async function runThreadMessage(threadId: string, assistantId: string) {
 
 export async function waitForThreadRun(threadId: string, runId: string) {
   const retrieveRun = async (): Promise<Run> => {
-    let run = await openai.beta.threads.runs.retrieve(threadId, runId);
+    const run = await openai.beta.threads.runs.retrieve(threadId, runId);
 
     if (run.status === "queued" || run.status === "in_progress") {
       await new Promise((resolve) => setTimeout(resolve, 1000));
