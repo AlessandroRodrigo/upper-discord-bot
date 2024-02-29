@@ -9,7 +9,6 @@ export async function messageCreateHandler(message: Message<boolean>) {
     logger.info(
       `Received message from ${message.author.id}: ${message.content}`,
     );
-
     const email = await redis.get(`discord:${message.author.id}:email`);
 
     if (!email) {
