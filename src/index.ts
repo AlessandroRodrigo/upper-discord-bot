@@ -1,3 +1,6 @@
+import { askCommand, emailCommand } from "@/commands";
+import { interactionCreateHandler } from "@/events/interaction-create-handler";
+import { messageCreateHandler } from "@/events/message-create-handler";
 import {
   Client,
   Events,
@@ -6,13 +9,9 @@ import {
   REST,
   Routes,
 } from "discord.js";
-import { askCommand, emailCommand } from "./commands";
-import { interactionCreateHandler } from "./events/interaction-create-handler";
-import { messageCreateHandler } from "./events/message-create-handler";
 
 const token = process.env.TOKEN!;
 const clientId = process.env.CLIENT_ID!;
-const guildId = "YOUR_GUILD_ID"; // Optional for global commands
 
 const client = new Client({
   intents: [
