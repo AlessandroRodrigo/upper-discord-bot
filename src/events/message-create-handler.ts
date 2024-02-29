@@ -8,10 +8,10 @@ import {
   removeMessageAnnotations,
   runThreadMessage,
   waitForThreadRun,
-} from "../assistant";
-import { logger } from "../lib/logger";
-import { checkIfSubscriptionIsActive } from "../lib/hotmart";
-import { redis } from "../lib/redis";
+} from "@/assistant";
+import { logger } from "@/lib/logger";
+import { redis } from "@/lib/redis";
+import { checkIfSubscriptionIsActive } from "@/lib/hotmart";
 
 export async function messageCreateHandler(message: Message<boolean>) {
   if (message.channel.type === ChannelType.DM && !message.author.bot) {
