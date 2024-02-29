@@ -1,5 +1,5 @@
+import { logger } from "@/lib/logger";
 import axios from "axios";
-import { logger } from "./logger";
 
 const ACTIVE_STATUS = "ACTIVE";
 
@@ -20,7 +20,7 @@ async function getToken() {
       headers: {
         Authorization: `Basic ${process.env.HOTMART_CLIENT_BASIC}`,
       },
-    }
+    },
   );
 
   return response.data.access_token;
@@ -39,7 +39,7 @@ async function getSubscriptionByEmail(email: string) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return response.data;
