@@ -31,9 +31,7 @@ export async function messageCreateHandler(message: Message<boolean>) {
     }
 
     message.channel.sendTyping();
-    const isSubscriptionAtive = await checkIfSubscriptionIsActive(
-      "alessandro.fresneda84@gmail.com",
-    );
+    const isSubscriptionAtive = await checkIfSubscriptionIsActive(email);
 
     if (isSubscriptionAtive) {
       const assistantId = await getOrCreateAssistant();
