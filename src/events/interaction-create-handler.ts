@@ -22,12 +22,14 @@ async function emailCommandHandler(interaction: CommandInteraction<CacheType>) {
   const parsedEmail = EmailCommandParser.safeParse(email);
 
   if (!parsedEmail.success) {
-    await interaction.reply("You provided an invalid email!");
+    await interaction.reply(
+      "O e-mail informado é inválido. Por favor, tente novamente.",
+    );
     return;
   }
 
   await redis.set(`discord:${interaction.user.id}:email`, parsedEmail.data);
   await interaction.reply(`
-    Your email has been set to **${email}**.
+    E-mail configurado com sucesso para **${parsedEmail.data}**.
   `);
 }
