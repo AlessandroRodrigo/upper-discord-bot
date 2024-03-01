@@ -9,8 +9,10 @@ export async function messageCreateHandler(message: Message<boolean>) {
     logger.info(
       `Received message from ${message.author.id}: ${message.content}`,
     );
+
     const isAdmin = message.member?.permissions.has("Administrator");
     if (isAdmin) {
+      message.channel.sendTyping();
       await processMessageWithAssistant(message);
       return;
     }
@@ -25,14 +27,13 @@ export async function messageCreateHandler(message: Message<boolean>) {
       return;
     }
 
-    message.channel.sendTyping();
-
     const isSubscriptionActive = await checkIfSubscriptionIsActive(foundEmail);
     if (!isSubscriptionActive) {
       message.reply("Seu e-mail não está ativo. Por favor, verifique.");
       return;
     }
 
+    message.channel.sendTyping();
     await processMessageWithAssistant(message);
     return;
   }
