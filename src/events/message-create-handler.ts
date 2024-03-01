@@ -5,10 +5,7 @@ import { redis } from "@/lib/redis";
 import { Message } from "discord.js";
 
 export async function messageCreateHandler(message: Message<boolean>) {
-  if (
-    (message.channel.isDMBased() || message.channel.isTextBased()) &&
-    !message.author.bot
-  ) {
+  if (shouldAnswer(message)) {
     logger.info(
       `Received message from ${message.author.id}: ${message.content}`,
     );
@@ -31,9 +28,9 @@ export async function messageCreateHandler(message: Message<boolean>) {
 
     if (!foundEmail) {
       logger.error(`Failed to get email for user ${message.author.id}`);
-      await message.channel.send("I'm sorry, I couldn't find your email.");
+      await message.channel.send("Desculpe, não consegui encontrar seu email.");
       await message.channel.send(
-        "Please, use the command `/email` to let me know your email.",
+        "Por favor use o comando `/email` para configurar seu email.",
       );
       return;
     }
@@ -43,7 +40,7 @@ export async function messageCreateHandler(message: Message<boolean>) {
     const isSubscriptionActive = await checkIfSubscriptionIsActive(foundEmail);
 
     if (!isSubscriptionActive) {
-      message.reply("You don't have an active subscription.");
+      message.reply("Seu e-mail não está ativo. Por favor, verifique.");
       return;
     }
 
@@ -55,4 +52,11 @@ export async function messageCreateHandler(message: Message<boolean>) {
     logger.info(`Sending message to ${message.author.id}: ${assistantMessage}`);
     await message.reply(assistantMessage);
   }
+}
+
+function shouldAnswer(message: Message<boolean>) {
+  return (
+    (message.channel.isDMBased() || message.channel.isTextBased()) &&
+    !message.author.bot
+  );
 }
