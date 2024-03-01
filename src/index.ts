@@ -1,4 +1,4 @@
-import { askCommand, emailCommand } from "@/commands";
+import { emailCommand } from "@/commands";
 import { interactionCreateHandler } from "@/events/interaction-create-handler";
 import { messageCreateHandler } from "@/events/message-create-handler";
 import { logger } from "@/lib/logger";
@@ -28,7 +28,7 @@ client.once(Events.ClientReady, () => {
   logger.info("Bot is ready.");
 });
 
-const commands = [askCommand, emailCommand].map((command) => command.toJSON());
+const commands = [emailCommand].map((command) => command.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(token);
 
