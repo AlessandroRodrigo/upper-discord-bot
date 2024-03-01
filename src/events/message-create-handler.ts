@@ -27,9 +27,9 @@ export async function messageCreateHandler(message: Message<boolean>) {
       return;
     }
 
-    const email = await redis.get(`discord:${message.author.id}:email`);
+    const foundEmail = await redis.get(`discord:${message.author.id}:email`);
 
-    if (!email) {
+    if (!foundEmail) {
       logger.error(`Failed to get email for user ${message.author.id}`);
       await message.channel.send("I'm sorry, I couldn't find your email.");
       await message.channel.send(
@@ -40,7 +40,7 @@ export async function messageCreateHandler(message: Message<boolean>) {
 
     message.channel.sendTyping();
 
-    const isSubscriptionAtive = await checkIfSubscriptionIsActive(email);
+    const isSubscriptionAtive = await checkIfSubscriptionIsActive(foundEmail);
 
     if (!isSubscriptionAtive) {
       message.reply("You don't have an active subscription.");
