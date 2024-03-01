@@ -2,10 +2,10 @@ import { AssistantFactory } from "@/factories/assistant";
 import { checkIfSubscriptionIsActive } from "@/lib/hotmart";
 import { logger } from "@/lib/logger";
 import { redis } from "@/lib/redis";
-import { ChannelType, Message } from "discord.js";
+import { Message } from "discord.js";
 
 export async function messageCreateHandler(message: Message<boolean>) {
-  if (message.channel.type === ChannelType.DM && !message.author.bot) {
+  if (message.channel.isDMBased() && !message.author.bot) {
     logger.info(
       `Received message from ${message.author.id}: ${message.content}`,
     );
@@ -41,6 +41,7 @@ export async function messageCreateHandler(message: Message<boolean>) {
 
     if (!isSubscriptionAtive) {
       message.reply("You don't have an active subscription.");
+      return;
     }
 
     const assistantMessage = await AssistantFactory.createAssistantMessage({
