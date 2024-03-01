@@ -5,7 +5,10 @@ import { redis } from "@/lib/redis";
 import { Message } from "discord.js";
 
 export async function messageCreateHandler(message: Message<boolean>) {
-  if (message.channel.isDMBased() && !message.author.bot) {
+  if (
+    (message.channel.isDMBased() || message.channel.isTextBased()) &&
+    !message.author.bot
+  ) {
     logger.info(
       `Received message from ${message.author.id}: ${message.content}`,
     );
