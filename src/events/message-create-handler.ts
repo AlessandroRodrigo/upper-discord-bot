@@ -10,22 +10,12 @@ export async function messageCreateHandler(message: Message<boolean>) {
       `Received message from ${message.author.id}: ${message.content}`,
     );
     const isAdmin = message.member?.permissions.has("Administrator");
-
     if (isAdmin) {
-      const assistantMessage = await AssistantFactory.createAssistantMessage({
-        authorId: message.author.id,
-        authorMessage: message.content,
-      });
-
-      logger.info(
-        `Sending message to ADMIN ${message.author.id}: ${assistantMessage}`,
-      );
-      await message.reply(assistantMessage);
+      await processMessageWithAssistant(message);
       return;
     }
 
     const foundEmail = await redis.get(`discord:${message.author.id}:email`);
-
     if (!foundEmail) {
       logger.error(`Failed to get email for user ${message.author.id}`);
       await message.channel.send("Desculpe, não consegui encontrar seu email.");
@@ -38,19 +28,13 @@ export async function messageCreateHandler(message: Message<boolean>) {
     message.channel.sendTyping();
 
     const isSubscriptionActive = await checkIfSubscriptionIsActive(foundEmail);
-
     if (!isSubscriptionActive) {
       message.reply("Seu e-mail não está ativo. Por favor, verifique.");
       return;
     }
 
-    const assistantMessage = await AssistantFactory.createAssistantMessage({
-      authorId: message.author.id,
-      authorMessage: message.content,
-    });
-
-    logger.info(`Sending message to ${message.author.id}: ${assistantMessage}`);
-    await message.reply(assistantMessage);
+    await processMessageWithAssistant(message);
+    return;
   }
 }
 
@@ -59,4 +43,14 @@ function shouldAnswer(message: Message<boolean>) {
     (message.channel.isDMBased() || message.channel.isTextBased()) &&
     !message.author.bot
   );
+}
+
+async function processMessageWithAssistant(message: Message<boolean>) {
+  const assistantMessage = await AssistantFactory.createAssistantMessage({
+    authorId: message.author.id,
+    authorMessage: message.content,
+  });
+
+  logger.info(`Sending message to ${message.author.id}: ${assistantMessage}`);
+  await message.reply(assistantMessage);
 }
