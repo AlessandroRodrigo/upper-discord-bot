@@ -40,9 +40,9 @@ export async function messageCreateHandler(message: Message<boolean>) {
 
     message.channel.sendTyping();
 
-    const isSubscriptionAtive = await checkIfSubscriptionIsActive(foundEmail);
+    const isSubscriptionActive = await checkIfSubscriptionIsActive(foundEmail);
 
-    if (!isSubscriptionAtive) {
+    if (!isSubscriptionActive) {
       message.reply("You don't have an active subscription.");
       return;
     }
