@@ -1,10 +1,5 @@
 import { redis } from "@/lib/redis";
-import {
-  CacheType,
-  CommandInteraction,
-  Interaction,
-  userMention,
-} from "discord.js";
+import { CacheType, CommandInteraction, Interaction } from "discord.js";
 import { z } from "zod";
 
 export async function interactionCreateHandler(
@@ -13,11 +8,6 @@ export async function interactionCreateHandler(
   if (!interaction.isCommand()) return;
 
   const { commandName } = interaction;
-
-  if (commandName === "ask") {
-    await askCommandHandler(interaction as CommandInteraction<CacheType>);
-    return;
-  }
 
   if (commandName === "email") {
     await emailCommandHandler(interaction as CommandInteraction<CacheType>);
@@ -39,21 +29,5 @@ async function emailCommandHandler(interaction: CommandInteraction<CacheType>) {
   await redis.set(`discord:${interaction.user.id}:email`, parsedEmail.data);
   await interaction.reply(`
     Your email has been set to **${email}**.
-  `);
-}
-
-async function askCommandHandler(interaction: CommandInteraction<CacheType>) {
-  const question = interaction.options.data.find(
-    (option) => option.name === "question",
-  )?.value;
-
-  if (!question) {
-    await interaction.reply("You didn't provide a question!");
-    return;
-  }
-
-  await interaction.user.send("You asked: " + question);
-  await interaction.reply(`
-    Hey, ${userMention(interaction.user.id)}! I've sent you a direct message with your question.
   `);
 }
