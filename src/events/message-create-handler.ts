@@ -12,7 +12,6 @@ export async function messageCreateHandler(message: Message<boolean>) {
 
     const isAdmin = message.member?.permissions.has("Administrator");
     if (isAdmin) {
-      message.channel.sendTyping();
       await processMessageWithAssistant(message);
       return;
     }
@@ -33,7 +32,6 @@ export async function messageCreateHandler(message: Message<boolean>) {
       return;
     }
 
-    message.channel.sendTyping();
     await processMessageWithAssistant(message);
     return;
   }
@@ -47,6 +45,8 @@ function shouldAnswer(message: Message<boolean>) {
 }
 
 async function processMessageWithAssistant(message: Message<boolean>) {
+  message.channel.sendTyping();
+
   const assistantMessage = await AssistantFactory.createAssistantMessage({
     authorId: message.author.id,
     authorMessage: message.content,
