@@ -9,6 +9,21 @@ export async function messageCreateHandler(message: Message<boolean>) {
     logger.info(
       `Received message from ${message.author.id}: ${message.content}`,
     );
+    const isAdmin = message.member?.permissions.has("Administrator");
+
+    if (isAdmin) {
+      const assistantMessage = await AssistantFactory.createAssistantMessage({
+        authorId: message.author.id,
+        authorMessage: message.content,
+      });
+
+      logger.info(
+        `Sending message to ADMIN ${message.author.id}: ${assistantMessage}`,
+      );
+      await message.reply(assistantMessage);
+      return;
+    }
+
     const email = await redis.get(`discord:${message.author.id}:email`);
 
     if (!email) {
@@ -21,20 +36,19 @@ export async function messageCreateHandler(message: Message<boolean>) {
     }
 
     message.channel.sendTyping();
+
     const isSubscriptionAtive = await checkIfSubscriptionIsActive(email);
 
-    if (isSubscriptionAtive) {
-      const assistantMessage = await AssistantFactory.createAssistantMessage({
-        authorId: message.author.id,
-        authorMessage: message.content,
-      });
-
-      logger.info(
-        `Sending message to ${message.author.id}: ${assistantMessage}`,
-      );
-      await message.reply(assistantMessage);
-    } else {
+    if (!isSubscriptionAtive) {
       message.reply("You don't have an active subscription.");
     }
+
+    const assistantMessage = await AssistantFactory.createAssistantMessage({
+      authorId: message.author.id,
+      authorMessage: message.content,
+    });
+
+    logger.info(`Sending message to ${message.author.id}: ${assistantMessage}`);
+    await message.reply(assistantMessage);
   }
 }
