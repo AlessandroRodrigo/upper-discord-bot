@@ -37,6 +37,14 @@ rest
   .then(() => logger.info("Successfully registered application commands."))
   .catch(logger.error);
 
+client.on(Events.Error, (error) => {
+  logger.error("A client error occurred:", error);
+});
+
+client.on(Events.Warn, (warning) => {
+  logger.warn("A client warning occurred:", warning);
+});
+
 client.on(Events.InteractionCreate, interactionCreateHandler);
 
 client.on(Events.MessageCreate, messageCreateHandler);
