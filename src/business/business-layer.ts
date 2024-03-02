@@ -26,8 +26,6 @@ function shouldAnswer(message: Message) {
     message.author.username,
   );
 
-  console.log(isTicketChannel);
-
   return isTextBased && isTicketChannel;
 }
 
