@@ -111,4 +111,42 @@ describe("business-layer", () => {
       expect(isTicketChannelSpy).toHaveBeenCalled();
     });
   });
+
+  describe("checkIfIsTicketChannel", () => {
+    it("returns true when the channel name is 'ticket-user'", () => {
+      const result = BusinessLayer.checkIfIsTicketChannel(
+        "ticket-user",
+        "user",
+      );
+
+      expect(result).toBe(true);
+    });
+
+    it("returns false when the channel name is 'ticket-user' and the user is not the same", () => {
+      const result = BusinessLayer.checkIfIsTicketChannel(
+        "ticket-user",
+        "another-user",
+      );
+
+      expect(result).toBe(false);
+    });
+
+    it("returns false when the channel name is 'ticket' and the user is not the same", () => {
+      const result = BusinessLayer.checkIfIsTicketChannel(
+        "ticket",
+        "another-user",
+      );
+
+      expect(result).toBe(false);
+    });
+
+    it("returns false when the channel name is not 'ticket' or 'ticket-user'", () => {
+      const result = BusinessLayer.checkIfIsTicketChannel(
+        "another-channel",
+        "user",
+      );
+
+      expect(result).toBe(false);
+    });
+  });
 });
