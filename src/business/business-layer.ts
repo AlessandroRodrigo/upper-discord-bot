@@ -13,12 +13,8 @@ function shouldAnswer(message: Message) {
   const isBot = message.author.bot;
   const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
 
-  if (isBot) {
+  if (isBot || isAdmin) {
     return false;
-  }
-
-  if (isAdmin) {
-    return true;
   }
 
   if (isDMBased && isTextBased) {
