@@ -33,14 +33,14 @@ describe("business-layer", () => {
       isTicketChannelSpy = vi.spyOn(BusinessLayer, "checkIfIsTicketChannel");
     });
 
-    it("answers when the message is from an administrator", () => {
+    it("doesn't answer when the message is from an administrator", () => {
       defaultMessage.member?.permissions.has.mockReturnValue(true);
 
       const result = BusinessLayer.shouldAnswer(
         defaultMessage as unknown as Message,
       );
 
-      expect(result).toBe(true);
+      expect(result).toBe(false);
       expect(isTicketChannelSpy).not.toHaveBeenCalled();
     });
 
