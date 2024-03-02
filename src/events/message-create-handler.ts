@@ -1,16 +1,15 @@
+import { BusinessLayer } from "@/business/business-layer";
+import { BUSINESS_CONSTANTS } from "@/business/constants";
 import { AssistantFactory } from "@/factories/assistant";
 import { checkIfSubscriptionIsActive } from "@/lib/hotmart";
 import { logger } from "@/lib/logger";
 import { redis } from "@/lib/redis";
-import { Util } from "@/util/is-ticket-channel";
 import { Message } from "discord.js";
-
-const ADMINISTRATOR_PERMISSION = "Administrator";
 
 export async function messageCreateHandler(message: Message<boolean>) {
   logger.info(`Received message from ${message.author.id}: ${message.content}`);
 
-  if (shouldAnswer(message)) {
+  if (BusinessLayer.shouldAnswer(message)) {
     logger.info(
       `Answering message from ${message.author.id}: ${message.content}`,
     );
@@ -39,33 +38,9 @@ export async function messageCreateHandler(message: Message<boolean>) {
   logger.info(`Ignoring message from ${message.author.id}: ${message.content}`);
 }
 
-function shouldAnswer(message: Message) {
-  const isDMBased = message.channel.isDMBased();
-  const isTextBased = message.channel.isTextBased();
-  const isBot = message.author.bot;
-  const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
-
-  if (isBot) {
-    return false;
-  }
-
-  if (isAdmin) {
-    return true;
-  }
-
-  if (isDMBased && isTextBased) {
-    return true;
-  }
-
-  const isTicketChannel = Util.isTicketChannel(
-    message.channel.name,
-    message.author.username,
-  );
-
-  return isTextBased && isTicketChannel;
-}
-
 function shouldVerifyEmail(message: Message) {
+  const { ADMINISTRATOR_PERMISSION } = BUSINESS_CONSTANTS;
+
   const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
 
   return !isAdmin;
