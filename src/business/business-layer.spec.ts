@@ -149,4 +149,34 @@ describe("business-layer", () => {
       expect(result).toBe(false);
     });
   });
+
+  describe("shouldVerifyEmail", () => {
+    it("returns true when the user is not an administrator", () => {
+      const message = {
+        member: {
+          permissions: {
+            has: vi.fn().mockReturnValue(false),
+          },
+        },
+      } as unknown as Message;
+
+      const result = BusinessLayer.shouldVerifyEmail(message);
+
+      expect(result).toBe(true);
+    });
+
+    it("returns false when the user is an administrator", () => {
+      const message = {
+        member: {
+          permissions: {
+            has: vi.fn().mockReturnValue(true),
+          },
+        },
+      } as unknown as Message;
+
+      const result = BusinessLayer.shouldVerifyEmail(message);
+
+      expect(result).toBe(false);
+    });
+  });
 });
