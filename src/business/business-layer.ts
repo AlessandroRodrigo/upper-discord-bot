@@ -35,7 +35,16 @@ function shouldAnswer(message: Message) {
   return isTextBased && isTicketChannel;
 }
 
+function shouldVerifyEmail(message: Message) {
+  const { ADMINISTRATOR_PERMISSION } = BUSINESS_CONSTANTS;
+
+  const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
+
+  return !isAdmin;
+}
+
 export const BusinessLayer = {
   shouldAnswer,
   checkIfIsTicketChannel,
+  shouldVerifyEmail,
 };
