@@ -1,5 +1,4 @@
 import { BusinessLayer } from "@/business/business-layer";
-import { BUSINESS_CONSTANTS } from "@/business/constants";
 import { AssistantFactory } from "@/factories/assistant";
 import { checkIfSubscriptionIsActive } from "@/lib/hotmart";
 import { logger } from "@/lib/logger";
@@ -14,7 +13,7 @@ export async function messageCreateHandler(message: Message<boolean>) {
       `Answering message from ${message.author.id}: ${message.content}`,
     );
 
-    if (!shouldVerifyEmail(message)) {
+    if (!BusinessLayer.shouldVerifyEmail(message)) {
       logger.info(`Processing message without email verification.`);
       await processMessageWithAssistant(message);
       return;
@@ -36,14 +35,6 @@ export async function messageCreateHandler(message: Message<boolean>) {
   }
 
   logger.info(`Ignoring message from ${message.author.id}: ${message.content}`);
-}
-
-function shouldVerifyEmail(message: Message) {
-  const { ADMINISTRATOR_PERMISSION } = BUSINESS_CONSTANTS;
-
-  const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
-
-  return !isAdmin;
 }
 
 async function processMessageWithAssistant(message: Message<boolean>) {
