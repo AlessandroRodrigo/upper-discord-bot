@@ -3,7 +3,12 @@ import { AssistantFactory } from "@/factories/assistant";
 import { checkIfSubscriptionIsActive } from "@/lib/hotmart";
 import { logger } from "@/lib/logger";
 import { redis } from "@/lib/redis";
-import { Message } from "discord.js";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  Message,
+} from "discord.js";
 
 export async function messageCreateHandler(message: Message<boolean>) {
   logger.info(`Received message from ${message.author.id}: ${message.content}`);
@@ -45,8 +50,26 @@ async function processMessageWithAssistant(message: Message<boolean>) {
     authorMessage: message.content,
   });
 
+  const usefulButton = new ButtonBuilder()
+    .setCustomId(`useful-${message.author.id}`)
+    .setLabel("Essa resposta foi útil")
+    .setStyle(ButtonStyle.Primary);
+
+  const notUsefulButton = new ButtonBuilder()
+    .setCustomId(`not-useful-${message.author.id}`)
+    .setLabel("Essa resposta não foi útil")
+    .setStyle(ButtonStyle.Secondary);
+
+  const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    usefulButton,
+    notUsefulButton,
+  );
+
   logger.info(`Sending message to ${message.author.id}: ${assistantMessage}`);
-  await message.reply(assistantMessage);
+  await message.reply({
+    content: assistantMessage,
+    components: [actionRow],
+  });
 }
 
 async function handleEmailVerification(
