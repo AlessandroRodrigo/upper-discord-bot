@@ -7,6 +7,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  ComponentType,
   Message,
 } from "discord.js";
 
@@ -66,9 +67,44 @@ async function processMessageWithAssistant(message: Message<boolean>) {
   );
 
   logger.info(`Sending message to ${message.author.id}: ${assistantMessage}`);
-  await message.reply({
+  const reply = await message.reply({
     content: assistantMessage,
     components: [actionRow],
+  });
+
+  handleFeedbackCollector(reply, message);
+}
+
+async function handleFeedbackCollector(
+  reply: Message,
+  originalMessage: Message,
+) {
+  const collector = reply.createMessageComponentCollector({
+    componentType: ComponentType.Button,
+    filter: (i) => i.user.id === originalMessage.author.id,
+    time: 600000 /* 10 minutes */,
+  });
+
+  collector.on("collect", async (interaction) => {
+    await interaction.deferReply({ ephemeral: true });
+    const isUseful = interaction.customId.startsWith("useful");
+    const isNotUseful = interaction.customId.startsWith("not-useful");
+
+    if (isUseful) {
+      await interaction.editReply("Obrigado por nos ajudar a melhorar!");
+    }
+
+    if (isNotUseful) {
+      await interaction.editReply("Obrigado por nos ajudar a melhorar!");
+    }
+
+    collector.stop();
+  });
+
+  collector.on("end", () => {
+    reply.edit({
+      components: [],
+    });
   });
 }
 
