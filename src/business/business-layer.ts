@@ -13,9 +13,9 @@ function shouldAnswer(message: Message) {
   const isContentBased = !!message.content;
   const isBot = message.author.bot;
   const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
-  const userId = message.author.id;
+  const isMasterUser = message.author.id === process.env.MASTER_USER;
 
-  if (userId === process.env.MASTER_USER) {
+  if (isMasterUser) {
     return true;
   }
 
