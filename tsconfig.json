@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "rootDir": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   }
 }
