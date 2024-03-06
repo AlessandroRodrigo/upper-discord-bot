@@ -13,6 +13,11 @@ function shouldAnswer(message: Message) {
   const isContentBased = !!message.content;
   const isBot = message.author.bot;
   const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
+  const userId = message.author.id;
+
+  if (userId === process.env.MASTER_USER) {
+    return true;
+  }
 
   if (!isContentBased) {
     return false;
