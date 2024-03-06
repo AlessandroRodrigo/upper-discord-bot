@@ -6,11 +6,13 @@ import { redis } from "@/lib/redis";
 import { Message } from "discord.js";
 
 export async function messageCreateHandler(message: Message<boolean>) {
-  logger.info(`Received message from ${message.author.id}: ${message.content}`);
+  logger.info(
+    `Received message from ${message.author.id} - ${message.author.username}: ${message.content}`,
+  );
 
   if (BusinessLayer.shouldAnswer(message)) {
     logger.info(
-      `Answering message from ${message.author.id}: ${message.content}`,
+      `Answering message from ${message.author.id} - ${message.author.username}: ${message.content}`,
     );
 
     if (!BusinessLayer.shouldVerifyEmail(message)) {
@@ -34,7 +36,9 @@ export async function messageCreateHandler(message: Message<boolean>) {
     return;
   }
 
-  logger.info(`Ignoring message from ${message.author.id}: ${message.content}`);
+  logger.info(
+    `Ignoring message from ${message.author.id} - ${message.author.username}: ${message.content}`,
+  );
 }
 
 async function processMessageWithAssistant(message: Message<boolean>) {
@@ -45,7 +49,9 @@ async function processMessageWithAssistant(message: Message<boolean>) {
     authorMessage: message.content,
   });
 
-  logger.info(`Sending message to ${message.author.id}: ${assistantMessage}`);
+  logger.info(
+    `Sending message to ${message.author.id} - ${message.author.username}: ${assistantMessage}`,
+  );
   await message.reply(assistantMessage);
 }
 
