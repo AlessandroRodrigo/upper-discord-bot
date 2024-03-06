@@ -16,6 +16,7 @@ const defaultMessage = {
       has: vi.fn(),
     },
   },
+  content: "mocked-content",
 };
 
 describe("business-layer", () => {
@@ -109,6 +110,17 @@ describe("business-layer", () => {
 
       expect(result).toBe(false);
       expect(isTicketChannelSpy).toHaveBeenCalled();
+    });
+
+    it("doesn't answer when the message is not content-based", () => {
+      defaultMessage.content = "";
+
+      const result = BusinessLayer.shouldAnswer(
+        defaultMessage as unknown as Message,
+      );
+
+      expect(result).toBe(false);
+      expect(isTicketChannelSpy).not.toHaveBeenCalled();
     });
   });
 
