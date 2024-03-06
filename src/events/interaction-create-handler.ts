@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { redis } from "@/lib/redis";
 import { CacheType, CommandInteraction, Interaction } from "discord.js";
 import { z } from "zod";
@@ -5,12 +6,17 @@ import { z } from "zod";
 export async function interactionCreateHandler(
   interaction: Interaction<CacheType>,
 ) {
+  logger.info(
+    `Received interaction of type ${interaction.type} from user ${interaction.user.id}`,
+  );
   if (!interaction.isCommand()) return;
 
   const { commandName } = interaction;
 
   if (commandName === "email") {
+    logger.info(`Handling email command for user ${interaction.user.id}`);
     await emailCommandHandler(interaction as CommandInteraction<CacheType>);
+    logger.info(`Handled email command for user ${interaction.user.id}`);
     return;
   }
 }
@@ -18,7 +24,7 @@ export async function interactionCreateHandler(
 const EmailCommandParser = z.coerce.string().email();
 
 async function emailCommandHandler(interaction: CommandInteraction<CacheType>) {
-  interaction.deferReply();
+  await interaction.deferReply();
   const email = interaction.options.get("email")?.value;
   const parsedEmail = EmailCommandParser.safeParse(email);
 
