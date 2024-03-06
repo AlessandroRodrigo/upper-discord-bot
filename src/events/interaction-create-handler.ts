@@ -30,6 +30,6 @@ async function emailCommandHandler(interaction: CommandInteraction<CacheType>) {
 
   await redis.set(`discord:${interaction.user.id}:email`, parsedEmail.data);
   await interaction.reply(`
-    E-mail configurado com sucesso para **${parsedEmail.data}**.
+    Muito bom! Seu e-mail foi salvo com sucesso. Agora podemos continuar com as suas dúvidas.
   `);
 }
