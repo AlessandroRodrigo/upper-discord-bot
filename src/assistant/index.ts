@@ -121,9 +121,9 @@ export function removeMessageAnnotations(message: MessageContentText.Text) {
   const annotations = message.annotations;
 
   for (const annotation of annotations) {
-    finalMessage = message.value.substring(
-      annotation.start_index,
-      annotation.end_index,
+    finalMessage = finalMessage.replace(
+      message.value.slice(annotation.start_index, annotation.end_index),
+      "",
     );
   }
   return finalMessage.trim();
