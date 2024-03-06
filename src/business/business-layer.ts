@@ -14,16 +14,13 @@ function shouldAnswer(message: Message) {
   const isBot = message.author.bot;
   const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
   const isMasterUser = message.author.id === process.env.MASTER_USER;
+  const isCommand = message.content.startsWith("/");
 
   if (isMasterUser) {
     return true;
   }
 
-  if (!isContentBased) {
-    return false;
-  }
-
-  if (isBot || isAdmin) {
+  if (isCommand || !isContentBased || isBot || isAdmin) {
     return false;
   }
 
