@@ -10,8 +10,13 @@ function shouldAnswer(message: Message) {
 
   const isDMBased = message.channel.isDMBased();
   const isTextBased = message.channel.isTextBased();
+  const isContentBased = !!message.content;
   const isBot = message.author.bot;
   const isAdmin = message.member?.permissions.has(ADMINISTRATOR_PERMISSION);
+
+  if (!isContentBased) {
+    return false;
+  }
 
   if (isBot || isAdmin) {
     return false;
