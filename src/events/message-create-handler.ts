@@ -69,7 +69,7 @@ async function handleEmailVerification(
       "Ei, estou aqui para te ajudar, mas notei que seu e-mail ainda não está configurado.",
     );
     await message.channel.send(
-      "Por favor use o comando `/email` para configurar seu email. Lembre-se de utilizar o mesmo da Hotmart.",
+      "Por favor use o comando `/email 'seu e-mail'` para configurar seu e-mail. Lembre-se de utilizar o mesmo da Hotmart.",
     );
     return;
   }
@@ -90,7 +90,7 @@ async function handleSubscriptionVerification(
       "Parece que seu e-mail não está ativo na Hotmart, você tem certeza que digitou corretamente?",
     );
     await message.reply(
-      "Por favor, use o comando `/email` para configurar seu e-mail novamente.",
+      "Por favor, use o comando `/email 'seu e-mail'` para configurar seu e-mail novamente.",
     );
     return;
   }
