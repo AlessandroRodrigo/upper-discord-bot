@@ -34,6 +34,15 @@ export async function messageCreateHandler(message: Message<boolean>) {
     return;
   }
 
+  const isContentBased = !!message.content;
+
+  if (!isContentBased) {
+    message.reply(
+      "Desculpe, ainda não consigo processar esse tipo de mensagem.",
+    );
+    return;
+  }
+
   logger.info(`Ignoring message from ${message.author.id}: ${message.content}`);
 }
 
