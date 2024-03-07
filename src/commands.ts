@@ -14,3 +14,13 @@ export const humanCommand = new SlashCommandBuilder()
 export const upperCommand = new SlashCommandBuilder()
   .setName("upper")
   .setDescription("Bring back the upper bot");
+
+export const askCommand = new SlashCommandBuilder()
+  .setName("ask")
+  .setDescription("Ask a question")
+  .addStringOption((option) =>
+    option
+      .setName("question")
+      .setDescription("Your question")
+      .setRequired(true),
+  );
