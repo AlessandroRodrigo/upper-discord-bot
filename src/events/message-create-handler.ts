@@ -10,7 +10,7 @@ export async function messageCreateHandler(message: Message<boolean>) {
     `Received message from ${message.author.id} - ${message.author.username}: ${message.content}`,
   );
 
-  if (BusinessLayer.shouldAnswer(message)) {
+  if (await BusinessLayer.shouldAnswer(message)) {
     logger.info(
       `Answering message from ${message.author.id} - ${message.author.username}: ${message.content}`,
     );
