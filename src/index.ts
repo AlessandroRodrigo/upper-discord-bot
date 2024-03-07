@@ -6,7 +6,6 @@ import {
 } from "@/commands";
 import { channelCreateHandler } from "@/events/channel-create-handler";
 import { interactionCreateHandler } from "@/events/interaction-create/handler";
-import { messageCreateHandler } from "@/events/message-create-handler";
 import { logger } from "@/lib/logger";
 import {
   Client,
@@ -56,8 +55,6 @@ client.on(Events.Warn, (warning) => {
 client.on(Events.ChannelCreate, channelCreateHandler);
 
 client.on(Events.InteractionCreate, interactionCreateHandler);
-
-client.on(Events.MessageCreate, messageCreateHandler);
 
 process.on("unhandledRejection", (error) => {
   logger.error("Unhandled promise rejection:", error);
