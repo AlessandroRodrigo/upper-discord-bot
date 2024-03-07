@@ -1,6 +1,11 @@
-import { emailCommand, humanCommand, upperCommand } from "@/commands";
+import {
+  askCommand,
+  emailCommand,
+  humanCommand,
+  upperCommand,
+} from "@/commands";
 import { channelCreateHandler } from "@/events/channel-create-handler";
-import { interactionCreateHandler } from "@/events/interaction-create-handler";
+import { interactionCreateHandler } from "@/events/interaction-create/handler";
 import { messageCreateHandler } from "@/events/message-create-handler";
 import { logger } from "@/lib/logger";
 import {
@@ -29,8 +34,8 @@ client.once(Events.ClientReady, () => {
   logger.info("Bot is ready.");
 });
 
-const commands = [emailCommand, humanCommand, upperCommand].map((command) =>
-  command.toJSON(),
+const commands = [emailCommand, humanCommand, upperCommand, askCommand].map(
+  (command) => command.toJSON(),
 );
 
 const rest = new REST({ version: "10" }).setToken(token);
