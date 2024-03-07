@@ -1,4 +1,5 @@
-import { emailCommand } from "@/commands";
+import { emailCommand, humanCommand, upperCommand } from "@/commands";
+import { channelCreateHandler } from "@/events/channel-create-handler";
 import { interactionCreateHandler } from "@/events/interaction-create-handler";
 import { messageCreateHandler } from "@/events/message-create-handler";
 import { logger } from "@/lib/logger";
@@ -28,7 +29,9 @@ client.once(Events.ClientReady, () => {
   logger.info("Bot is ready.");
 });
 
-const commands = [emailCommand].map((command) => command.toJSON());
+const commands = [emailCommand, humanCommand, upperCommand].map((command) =>
+  command.toJSON(),
+);
 
 const rest = new REST({ version: "10" }).setToken(token);
 
@@ -38,12 +41,14 @@ rest
   .catch(logger.error);
 
 client.on(Events.Error, (error) => {
-  logger.error("A client error occurred:", error);
+  logger.trace("A client error occurred:", error);
 });
 
 client.on(Events.Warn, (warning) => {
-  logger.warn("A client warning occurred:", warning);
+  logger.trace("A client warning occurred:", warning);
 });
+
+client.on(Events.ChannelCreate, channelCreateHandler);
 
 client.on(Events.InteractionCreate, interactionCreateHandler);
 
