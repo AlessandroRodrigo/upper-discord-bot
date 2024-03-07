@@ -6,7 +6,7 @@ function checkIfIsTicketChannel(channelName: string, userName: string) {
   return channelName.includes(userName);
 }
 
-function shouldAnswer(message: Message) {
+async function shouldAnswer(message: Message) {
   const { ADMINISTRATOR_PERMISSION } = BUSINESS_CONSTANTS;
 
   const isDMBased = message.channel.isDMBased();
@@ -33,9 +33,14 @@ function shouldAnswer(message: Message) {
     message.channel.name,
     message.author.username,
   );
-  const needsHuman = redis.get(`discord:${message.author.id}:needsHuman`);
 
-  if (isTextBased && isTicketChannel && !needsHuman) {
+  if (!isTicketChannel) {
+    return false;
+  }
+
+  const needsHuman = await redis.get(`discord:${message.author.id}:needsHuman`);
+
+  if (isTextBased && !needsHuman) {
     return true;
   }
 
