@@ -1,3 +1,4 @@
+import { AssistantUtils } from "@/assistant/utils";
 import { BusinessLayer } from "@/business/business-layer";
 import { AssistantFactory } from "@/factories/assistant";
 // import { checkIfSubscriptionIsActive } from "@/lib/hotmart";
@@ -9,6 +10,25 @@ export async function messageCreateHandler(message: Message<boolean>) {
   logger.info(
     `Received message from ${message.author.id} - ${message.author.username}: ${message.content}`,
   );
+  const hasAudio = message.attachments.some((attachment) =>
+    attachment.contentType?.includes("audio"),
+  );
+
+  if (hasAudio) {
+    logger.info(`Processing audio message.`);
+    const audioUrl = message.attachments.find((attachment) =>
+      attachment.contentType?.includes("audio"),
+    )?.url;
+
+    if (!audioUrl) {
+      logger.info(`Audio URL not found.`);
+      return;
+    }
+
+    const transcript = await AssistantUtils.transcriptAudio(audioUrl);
+    logger.info(`Transcripted audio: ${transcript}`);
+    message.content = transcript;
+  }
 
   if (await BusinessLayer.shouldAnswer(message)) {
     logger.info(
