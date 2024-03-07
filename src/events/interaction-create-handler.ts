@@ -23,6 +23,28 @@ export async function interactionCreateHandler(
     );
     return;
   }
+
+  if (commandName === "human") {
+    logger.info(
+      `Handling human command for user ${interaction.user.id} - ${interaction.user.username}`,
+    );
+    await humanCommandHandler(interaction as CommandInteraction<CacheType>);
+    logger.info(
+      `Handled human command for user ${interaction.user.id} - ${interaction.user.username}`,
+    );
+    return;
+  }
+
+  if (commandName === "upper") {
+    logger.info(
+      `Handling upper command for user ${interaction.user.id} - ${interaction.user.username}`,
+    );
+    await upperCommandHandler(interaction as CommandInteraction<CacheType>);
+    logger.info(
+      `Handled upper command for user ${interaction.user.id} - ${interaction.user.username}`,
+    );
+    return;
+  }
 }
 
 const EmailCommandParser = z.coerce.string().email();
@@ -42,5 +64,29 @@ async function emailCommandHandler(interaction: CommandInteraction<CacheType>) {
   await redis.set(`discord:${interaction.user.id}:email`, parsedEmail.data);
   await interaction.editReply(`
     Muito bom! Seu e-mail foi salvo com sucesso. Agora podemos continuar com as suas dúvidas.
+  `);
+}
+
+async function humanCommandHandler(interaction: CommandInteraction<CacheType>) {
+  await interaction.deferReply();
+
+  await redis.set(`discord:${interaction.user.id}:needsHuman`, "true");
+
+  await interaction.editReply(`
+    Entendido! Nossos moderadores já foram notificados e em breve irão te ajudar.
+  `);
+
+  await interaction.followUp(`
+    Se precisar da minha ajuda novamente, basta utilizar o comando \`/upper\` e eu voltarei a te ajudar.
+  `);
+}
+
+async function upperCommandHandler(interaction: CommandInteraction<CacheType>) {
+  await interaction.deferReply();
+
+  await redis.del(`discord:${interaction.user.id}:needsHuman`);
+
+  await interaction.editReply(`
+    Olá! Eu estou de volta para te ajudar. Se precisar de ajuda, basta me chamar.
   `);
 }
