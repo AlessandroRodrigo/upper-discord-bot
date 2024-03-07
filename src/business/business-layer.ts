@@ -1,4 +1,5 @@
 import { BUSINESS_CONSTANTS } from "@/business/constants";
+import { redis } from "@/lib/redis";
 import { Message } from "discord.js";
 
 function checkIfIsTicketChannel(channelName: string, userName: string) {
@@ -32,8 +33,13 @@ function shouldAnswer(message: Message) {
     message.channel.name,
     message.author.username,
   );
+  const needsHuman = redis.get(`discord:${message.author.id}:needsHuman`);
 
-  return isTextBased && isTicketChannel;
+  if (isTextBased && isTicketChannel && !needsHuman) {
+    return true;
+  }
+
+  return false;
 }
 
 function shouldVerifyEmail(message: Message) {
