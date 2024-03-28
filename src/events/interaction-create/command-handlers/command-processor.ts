@@ -1,4 +1,5 @@
 import { askCommandHandler } from "@/events/interaction-create/command-handlers/ask-command-handler";
+import { cancelCommandHandler } from "@/events/interaction-create/command-handlers/cancel-command-handler";
 import { emailCommandHandler } from "@/events/interaction-create/command-handlers/email-command-handler";
 import { humanCommandHandler } from "@/events/interaction-create/command-handlers/human-command-handler";
 import { upperCommandHandler } from "@/events/interaction-create/command-handlers/upper-command-handler";
@@ -13,6 +14,7 @@ export async function commandProcessor(
     humanCommandHandler,
     upperCommandHandler,
     askCommandHandler,
+    cancelCommandHandler,
   ];
 
   for (const handler of handlers) {
