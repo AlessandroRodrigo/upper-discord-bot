@@ -36,9 +36,6 @@ export async function channelCreateHandler(
 async function handleGreetings(channel: TextChannel) {
   logger.info(`Sending welcome message to ${channel.id} - ${channel.name}`);
   await channel.send(
-    `Olá! Eu sou o Upper e estou aqui para te ajudar com dúvidas do curso, para começar me diga qual é o seu e-mail. Para fazer isso basta usar o comando \`/email <seu-email>\`. Se já configurou seu e-mail, basta ignorar essa mensagem e me enviar sua dúvida.`,
-  );
-  await channel.send(
-    `Se precisar falar com um humano, basta utilizar o comando \`/human\` e um de nossos moderadores irá te ajudar.`,
+    `Olá! Eu sou o Upper e estou aqui para te ajudar com dúvidas do curso. Se quiser me perguntar algo sobre o curso, utilize o comando \`/ask <sua pergunta>\`, se deseja cancelar sua assinatura, digite \`/cancelar\`.`,
   );
 }
