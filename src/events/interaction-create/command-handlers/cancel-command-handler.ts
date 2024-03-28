@@ -16,7 +16,7 @@ async function handler(interaction: CommandInteraction<CacheType>) {
 }
 
 async function accept(interaction: CommandInteraction<CacheType>) {
-  return interaction.commandName === "cancel";
+  return interaction.commandName === "cancelar";
 }
 
 export const cancelCommandHandler = {
