@@ -24,3 +24,7 @@ export const askCommand = new SlashCommandBuilder()
       .setDescription("Your question")
       .setRequired(true),
   );
+
+export const cancelCommand = new SlashCommandBuilder()
+  .setName("cancelar")
+  .setDescription("Cancel your subscription");
