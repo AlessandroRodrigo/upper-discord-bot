@@ -1,5 +1,6 @@
 import {
   askCommand,
+  cancelCommand,
   emailCommand,
   humanCommand,
   upperCommand,
@@ -33,9 +34,13 @@ client.once(Events.ClientReady, () => {
   logger.info("Bot is ready.");
 });
 
-const commands = [emailCommand, humanCommand, upperCommand, askCommand].map(
-  (command) => command.toJSON(),
-);
+const commands = [
+  emailCommand,
+  humanCommand,
+  upperCommand,
+  askCommand,
+  cancelCommand,
+].map((command) => command.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(token);
 
